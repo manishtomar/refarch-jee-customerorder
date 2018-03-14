@@ -1,0 +1,22 @@
+version: "3.3"
+services: 
+  web:
+    build: .
+    ports: 
+      - "9080:9080"
+        #env_file: Common/server.env
+    depends_on:
+      - db2_inventory
+      - db2_order
+  db2_inventory:
+    image: ibmcom/db2express-c
+    command: db2start
+    environment:
+      DB2INST1_PASSWORD: db2inst1-pwd
+      LICENSE: accept
+  db2_order:
+    image: ibmcom/db2express-c
+    command: db2start
+    environment:
+      DB2INST1_PASSWORD: db2inst1-pwd
+      LICENSE: accept

@@ -11,17 +11,17 @@
     <feature>appSecurity-2.0</feature>
     <feature>ldapRegistry-3.0</feature>
   </featureManager>
-  <library id="DB2Lib" apiTypeVisibility="spec, ibm-api, third-party">
+  <library id="DB2Lib">
     <fileset dir="${env.DB2_JARS}" includes="db2jcc4.jar db2jcc_license_cu.jar"/>
   </library>
   <dataSource id="OrderDS" type="javax.sql.XADataSource" jndiName="jdbc/orderds">
     <jdbcDriver libraryRef="DB2Lib"/>
-    <properties.db2.jcc  user="${env.DB2_USER_ORDER}" password="${env.DB2_PASSWORD_ORDER}" databaseName="${env.DB2_DBNAME_ORDER}" serverName="${env.DB2_HOST_ORDER}" portNumber="${env.DB2_PORT_ORDER}"/>
+    <properties.db2.jcc  user="db2inst1" password="db2inst1-pwd" databaseName="ORDERDB" serverName="db2_order" portNumber="50000"/>
     <connectionManager agedTimeout="0" connectionTimeout="180" maxIdleTime="1800" maxPoolSize="10" minPoolSize="1" reapTime="180"/>
   </dataSource>
   <dataSource id="INDS" type="javax.sql.XADataSource" jndiName="jdbc/inds">
     <jdbcDriver libraryRef="DB2Lib"/>
-    <properties.db2.jcc  user="${env.DB2_USER_INVENTORY}" password="${env.DB2_PASSWORD_INVENTORY}" databaseName="${env.DB2_DBNAME_INVENTORY}" serverName="${env.DB2_HOST_INVENTORY}" portNumber="${env.DB2_PORT_INVENTORY}"/>
+    <properties.db2.jcc  user="db2inst1" password="db2inst1-pwd" databaseName="INDB" serverName="db2_inventory" portNumber="50000"/>
     <connectionManager agedTimeout="0" connectionTimeout="180" maxIdleTime="1800" maxPoolSize="10" minPoolSize="1" reapTime="180"/>
   </dataSource>
   <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint">
