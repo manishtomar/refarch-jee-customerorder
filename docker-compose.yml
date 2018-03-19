@@ -9,14 +9,28 @@ services:
       - db2_inventory
       - db2_order
   db2_inventory:
-    image: ibmcom/db2express-c
-    command: db2start
+    image: store/ibmcorp/db2_developer_c:11.1.2.2b-x86_64
+    privileged: true
     environment:
-      DB2INST1_PASSWORD: db2inst1-pwd
       LICENSE: accept
+      DB2INSTANCE: db2inst1
+      DB2INST1_PASSWORD: password
+      DBNAME: INDB
+      BLU: "false"
+      ENABLE_ORACLE_COMPATIBILITY: "false"
+      UPDATEAVAIL: "NO"
+      TO_CREATE_SAMPLEDB: "false"
+      REPODB: "false"
   db2_order:
-    image: ibmcom/db2express-c
-    command: db2start
+    image: store/ibmcorp/db2_developer_c:11.1.2.2b-x86_64
+    privileged: true
     environment:
-      DB2INST1_PASSWORD: db2inst1-pwd
       LICENSE: accept
+      DB2INSTANCE: db2inst1
+      DB2INST1_PASSWORD: password
+      DBNAME: ORDERDB
+      BLU: "false"
+      ENABLE_ORACLE_COMPATIBILITY: "false"
+      UPDATEAVAIL: "NO"
+      TO_CREATE_SAMPLEDB: "false"
+      REPODB: "false"
