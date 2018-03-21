@@ -2,9 +2,9 @@ version: "3.3"
 services: 
   web:
     build: .
+    command: dockerize -wait tcp://db_inventory:50000 -wait tcp://db2_order:50000 /opt/ibm/wlp/bin/server run defaultServer
     ports: 
       - "9080:9080"
-        #env_file: Common/server.env
     depends_on:
       - db2_inventory
       - db2_order
