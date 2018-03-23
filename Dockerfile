@@ -1,15 +1,8 @@
 FROM websphere-liberty:webProfile7
 
-# Install dockerize to wait for DB containers to load before connecting
-#RUN apt-get update && apt-get install -y wget
-ENV DOCKERIZE_VERSION v0.6.0
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-&& rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-
 # Install db2cli to bootstrap the DB
+RUN apt-get update && apt-get install -y libxml2
 ADD v10.5fp9_linuxx64_odbc_cli.tar.gz /opt/ibm
-ENV LD_LIBRARY_PATH /opt/ibm/odbc_cli/clidriver/lib
 
 RUN /opt/ibm/wlp/bin/installUtility install  --acceptLicense \
     appSecurity-2.0 \
@@ -31,5 +24,8 @@ COPY Common/server.env /config/server.env
 COPY CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /config/apps
 
 COPY Common/*.sql /config/
+
+COPY docker_entrypoint.sh /
+CMD ["/docker_entrypoint.sh", "/opt/ibm/wlp/bin/server", "run", "defaultServer"]
 
 EXPOSE 9080
