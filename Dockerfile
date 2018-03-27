@@ -1,8 +1,8 @@
 FROM websphere-liberty:webProfile7
 
-COPY Common/server.xml /config
-COPY Common/server.env.docker /config/server.env
-COPY CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /config/apps
+# Install db2cli to bootstrap the DB
+RUN apt-get update && apt-get install -y libxml2
+ADD v10.5fp9_linuxx64_odbc_cli.tar.gz /opt/ibm
 
 RUN /opt/ibm/wlp/bin/installUtility install  --acceptLicense \
     appSecurity-2.0 \
@@ -18,3 +18,14 @@ RUN /opt/ibm/wlp/bin/installUtility install  --acceptLicense \
 ADD https://artifacts.alfresco.com/nexus/content/repositories/public/com/ibm/db2/jcc/db2jcc4/10.1/db2jcc4-10.1.jar /db2lib/db2jcc4.jar
 
 ADD http://download.osgeo.org/webdav/geotools/com/ibm/db2jcc_license_cu/9/db2jcc_license_cu-9.jar /db2lib/db2jcc_lisence_cu.jar
+
+COPY Common/server.xml /config/server.xml
+COPY Common/server.env /config/server.env
+COPY CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /config/apps
+
+COPY Common/*.sql /config/
+
+COPY docker_entrypoint.sh /
+CMD ["/docker_entrypoint.sh", "/opt/ibm/wlp/bin/server", "run", "defaultServer"]
+
+EXPOSE 9080
