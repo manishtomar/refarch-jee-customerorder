@@ -1,3 +1,13 @@
+FROM maven:latest AS builder
+
+WORKDIR /app
+COPY CustomerOrderServices/ CustomerOrderServices/
+COPY CustomerOrderServicesProject/ CustomerOrderServicesProject/
+COPY CustomerOrderServicesApp/ CustomerOrderServicesApp/
+COPY CustomerOrderServicesTest/ CustomerOrderServicesTest/
+COPY CustomerOrderServicesWeb/ CustomerOrderServicesWeb/
+RUN cd /app/CustomerOrderServicesProject && mvn clean package
+
 FROM websphere-liberty:webProfile7
 
 # Install db2cli to bootstrap the DB
@@ -21,7 +31,7 @@ ADD http://download.osgeo.org/webdav/geotools/com/ibm/db2jcc_license_cu/9/db2jcc
 
 COPY Common/server.xml /config/server.xml
 COPY Common/server.env /config/server.env
-COPY CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /config/apps
+COPY --from=builder /app/CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /config/apps
 
 COPY Common/*.sql /config/
 
