@@ -8,7 +8,7 @@ COPY CustomerOrderServicesTest/ CustomerOrderServicesTest/
 COPY CustomerOrderServicesWeb/ CustomerOrderServicesWeb/
 RUN cd /app/CustomerOrderServicesProject && mvn clean package
 
-FROM websphere-liberty:webProfile7
+FROM store/ibmcorp/websphere-liberty:webProfile7
 
 # Install db2cli to bootstrap the DB
 RUN apt-get update && apt-get install -y libxml2
@@ -25,9 +25,9 @@ RUN /opt/ibm/wlp/bin/installUtility install  --acceptLicense \
     jsp-2.3 \
     servlet-3.1
 
-ADD https://artifacts.alfresco.com/nexus/content/repositories/public/com/ibm/db2/jcc/db2jcc4/10.1/db2jcc4-10.1.jar /db2lib/db2jcc4.jar
-
-ADD http://download.osgeo.org/webdav/geotools/com/ibm/db2jcc_license_cu/9/db2jcc_license_cu-9.jar /db2lib/db2jcc_lisence_cu.jar
+RUN mkdir /db2lib && cd /db2lib && \
+	wget https://artifacts.alfresco.com/nexus/content/repositories/public/com/ibm/db2/jcc/db2jcc4/10.1/db2jcc4-10.1.jar -O db2jcc4.jar && \
+	wget http://download.osgeo.org/webdav/geotools/com/ibm/db2jcc_license_cu/9/db2jcc_license_cu-9.jar -O db2jcc_lisence_cu.jar
 
 COPY Common/server.xml /config/server.xml
 COPY Common/server.env /config/server.env
