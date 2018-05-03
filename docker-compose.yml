@@ -11,8 +11,12 @@ services:
       DB2_HOST_ORDER: db2_order
       DB2_HOST_INVENTORY: db2_inventory
       BOOTSTRAP: "yes"
+      WLP_LOGGING_CONSOLE_SOURCE: "message,trace"
+      WLP_LOGGING_CONSOLE_FORMAT: json
   db2_inventory:
     image: store/ibmcorp/db2_developer_c:11.1.2.2b-x86_64
+    ports:
+      - "50000:50000"
     privileged: true
     environment:
       LICENSE: accept
@@ -26,6 +30,8 @@ services:
       REPODB: "false"
   db2_order:
     image: store/ibmcorp/db2_developer_c:11.1.2.2b-x86_64
+    ports:
+      - "50001:50000"
     privileged: true
     environment:
       LICENSE: accept
