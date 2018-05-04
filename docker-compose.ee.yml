@@ -1,0 +1,15 @@
+version: "3.3"
+services: 
+  liberty:
+    image: $DTR_ADDRESS/admin/liberty_app:latest
+    ports: 
+      - "9080:9080"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+    environment:
+      - BOOTSTRAP=yes
+      - DB2_HOST_INVENTORY
+      - DB2_HOST_ORDER
+      
