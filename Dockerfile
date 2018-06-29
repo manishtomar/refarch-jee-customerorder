@@ -12,7 +12,7 @@ FROM store/ibmcorp/websphere-liberty:webProfile7
 
 # Install db2cli to bootstrap the DB
 RUN apt-get update && apt-get install -y libxml2
-ADD v10.5fp9_linuxx64_odbc_cli.tar.gz /opt/ibm
+ADD  v11.1.3fp3a_linuxx64_odbc_cli.tar.gz /opt/ibm
 
 RUN /opt/ibm/wlp/bin/installUtility install  --acceptLicense \
     appSecurity-2.0 \

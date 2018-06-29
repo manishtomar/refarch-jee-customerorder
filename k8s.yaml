@@ -1,0 +1,150 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: db2-inventory-deployment
+spec:
+  selector:
+    matchLabels:
+      app: db2-inventory-pods
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: db2-inventory-pods
+    spec:
+      containers:
+        - name: db
+          image: store/ibmcorp/db2_developer_c:11.1.2.2b-x86_64
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 50000
+          env:
+            - name: LICENSE
+              value: "accept"
+            - name: DB2INSTANCE
+              value: "db2inst1"
+            - name: DB2INST1_PASSWORD
+              value: "password"
+            - name: DBNAME
+              value: "INDB"
+            - name: BLU
+              value: "false"
+            - name: ENABLE_ORACLE_COMPATIBILITY
+              value: "false"
+            - name: UPDATEAVAIL
+              value: "NO"
+            - name: TO_CREATE_SAMPLEDB
+              value: "false"
+            - name: REPODB
+              value: "false"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db2inventory
+  labels:
+    app: db2inventory
+spec:
+  ports:
+    - port: 50000
+  selector:
+    app: db2-inventory-pods
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: db2-order-deployment
+spec:
+  selector:
+    matchLabels:
+      app: db2-order-pods
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: db2-order-pods
+    spec:
+      containers: 
+        - name: db
+          image: store/ibmcorp/db2_developer_c:11.1.2.2b-x86_64
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 50000
+          env:
+            - name: LICENSE
+              value: "accept"
+            - name: DB2INSTANCE
+              value: "db2inst1"
+            - name: DB2INST1_PASSWORD
+              value: "password"
+            - name: DBNAME
+              value: "INDB"
+            - name: BLU
+              value: "false"
+            - name: ENABLE_ORACLE_COMPATIBILITY
+              value: "false"
+            - name: UPDATEAVAIL
+              value: "NO"
+            - name: TO_CREATE_SAMPLEDB
+              value: "false"
+            - name: REPODB
+              value: "false"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db2order
+  labels:
+    app: db2order
+spec:
+  ports:
+    - port: 50000
+  selector:
+    app: db2-order-pods
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: liberty-deployment
+spec:
+  selector:
+    matchLabels:
+      app: liberty-pods
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: liberty-pods
+    spec:
+      containers:
+        - name: web
+          image: manisht/liberty@sha256:b84fca2ac3e8d503282bd727062f2408d2869b5d22de532fd8a4df082ac15396
+          ports:
+            - containerPort: 9080
+          env:
+            - name: DB2_HOST_ORDER
+              value: "db2order"
+            - name: DB2_HOST_INVENTORY
+              value: "db2inventory"
+            - name: BOOTSTRAP
+              value: "yes"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: liberty
+  labels:
+    app: liberty
+spec:
+  type: NodePort
+  ports:
+    - port: 9080
+      nodePort: 30002
+  selector:
+    app: liberty-pods
+
