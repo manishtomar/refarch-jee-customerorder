@@ -123,8 +123,8 @@ spec:
     spec:
       containers:
         - name: web
-          #image: refarch-jee-customerorder_liberty #manisht/liberty@sha256:b84fca2ac3e8d503282bd727062f2408d2869b5d22de532fd8a4df082ac15396
-          image: manisht/liberty
+          image: refarch-jee-customerorder_liberty
+          imagePullPolicy: Never
           ports:
             - containerPort: 9080
           env:
